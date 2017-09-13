@@ -83,11 +83,11 @@ Each method returns an object with the following properties:
 
 This method can be used for keep-alive. To test the connection with the API:
 
-{{< highlight ruby >}}
+```ruby
 irb(main)> response= T2Airtime::API.api.ping
 irb(main)> response.success?
 => true
-{{</ highlight >}} 
+```
 
 <a name="account_info"></a>
 #### Account Information
@@ -97,14 +97,14 @@ To format the response as JSON-API you can call `T2Airtime::Account.serialize(da
 
 From a Rails console (or Ruby file):
 
-{{< highlight ruby >}}
+```ruby
 irb(main)> response= T2Airtime::API.api.account_info
 irb(main)> account= T2Airtime::Account.serialize(response.data)
-{{</ highlight >}} 
+```
 
 The serializer returns the following JSON representation of your account:
 
-{{< highlight ruby >}}
+```ruby
 {
     "type": "accounts",
     # Account login name
@@ -148,14 +148,14 @@ To format the response as JSON-API you can call `T2Airtime::Country.serialize(da
 
 From a Rails console (or Ruby file):
 
-{{< highlight ruby >}}
+```ruby
 irb(main)> response= T2Airtime::API.api.country_list
 irb(main)> countries= T2Airtime::Country.serialize(response.data)
-{{</ highlight >}} 
+```
 
 The serializer returns the following JSON representation of a country:
 
-{{< highlight ruby >}}
+```ruby
 {
     "type": "countries",
     # Unique Airtime ID for the country
@@ -174,7 +174,7 @@ The serializer returns the following JSON representation of a country:
         "operators": { "links": { "related": "/countries/COUNTRY_ID/operators" } }
     }
 }
-{{</ highlight >}} 
+```
 
 The `relationships` section of the response provides a link you can use to navigate the country operators.
 
@@ -191,14 +191,14 @@ To format the response as JSON-API you can call `T2Airtime::Operator.serialize(d
 
 From a Rails console (or Ruby file):
 
-{{< highlight ruby >}}
+```ruby
 irb(main)> response= T2Airtime::API.api.operator_list countries.shuffle.first["id"]
 irb(main)> operators= T2Airtime::Operator.serialize(response.data)
-{{</ highlight >}} 
+```
 
 The serializer returns the following JSON representation of an operator:
 
-{{< highlight ruby >}}
+```ruby
 {
     "type": "operators",
     # Unique Airtime ID for the operator
@@ -229,7 +229,7 @@ The serializer returns the following JSON representation of an operator:
         }
     ] 
 }
-{{</ highlight >}}             
+```            
 
 * The `relationships` section of the response provides a link you can use to navigate the operator products.
 * The `included` section of the response provides all the information regarding the operator's country.
@@ -247,14 +247,14 @@ To format the response as JSON-API you can call `T2Airtime::Product.serialize(da
 
 From a Rails console (or Ruby file):
 
-{{< highlight ruby >}}
+```ruby
 irb(main)> response= T2Airtime::API.api.product_list operators.shuffle.first["id"]
 irb(main)> products= T2Airtime::Product.serialize(response.data)
-{{</ highlight >}} 
+```
 
 The serializer returns the following JSON representation of a product:
 
-{{< highlight ruby >}}
+```ruby
 {
     "type": "products",
     # Airtime ID for the product. Attention! It is only unique within
@@ -297,7 +297,7 @@ The serializer returns the following JSON representation of a product:
     ]
     }
 }
-{{</ highlight >}}             
+```            
 
 * The `relationships` section of the response provides a link you can use to navigate the product `included` relationships.
 * The `included` section of the response provides all the information regarding the product's country and operator.
@@ -315,10 +315,10 @@ To format the response as JSON-API you can call `T2Airtime::Transaction.serializ
 
 From a Rails console (or Ruby file):
 
-{{< highlight ruby >}}
+```ruby
 irb(main)> response= T2Airtime::API.api.transaction_list
 irb(main)> transactions= T2Airtime::Transaction.serialize(response.data)
-{{</ highlight >}} 
+```
 
 From a browser:
 [http://localhost:3000/transactions](/)
@@ -334,14 +334,14 @@ To format the response as JSON-API you can call `T2Airtime::Transaction.serializ
 
 From a Rails console (or Ruby file):
 
-{{< highlight ruby >}}
+```ruby
 irb(main)> response= T2Airtime::API.api.transaction_info
 irb(main)> transactions= T2Airtime::Transaction.serialize_one(response.data)
 {{</ highlight >}}
 
 The serializer returns the following JSON representation of a transaction:
 
-{{< highlight ruby >}}
+```ruby
 {
     type: "transactions",
     # Unique Airtime ID for the transaction
@@ -428,7 +428,7 @@ The serializer returns the following JSON representation of a transaction:
         }
     ]
 }
-{{</ highlight >}}             
+```            
 
 * The `relationships` section of the response provides a link you can use to navigate the product `included` relationships.
 * The `included` section of the response provides all the information regarding the product's country and operator.
