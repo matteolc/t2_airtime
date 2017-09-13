@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>README - T2Airtime</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-TransferTo+Airtime+API">TransferTo Airtime API</a>
+    <li><a href="#label-Usage">Usage</a>
+    <li><a href="#label-Routes">Routes</a>
+    <li><a href="#label-API+Object">API Object</a>
+    <li><a href="#label-Ping">Ping</a>
+    <li><a href="#label-Account+Information">Account Information</a>
+    <li><a href="#label-Country+List">Country List</a>
+    <li><a href="#label-Operator+List">Operator List</a>
+    <li><a href="#label-Product+List">Product List</a>
+    <li><a href="#label-Transaction+List">Transaction List</a>
+    <li><a href="#label-Transaction+Information">Transaction Information</a>
+    <li><a href="#label-Testing">Testing</a>
+    <li><a href="#label-Contributing">Contributing</a>
+    <li><a href="#label-License">License</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./README_md.html">README</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page README.md">
+
+<h1 id="label-TransferTo+Airtime+API">TransferTo Airtime API<span><a href="#label-TransferTo+Airtime+API">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p><a href="https://www.transfer-to.com/home">TransferTo</a> helps businesses
+offer airtime top-ups, goods and services, and mobile money around the
+world in real time. TransferTo Airtime API enables developers to integrate
+TransferTo Top-up service into their system.</p>
+
+<p>This gem is a convenience wrapper around the Airtime API. Requirement is
+that Two Factor Authentication (2FA) is enabled in your <a
+href="https://shop.transferto.com">TransferTo Shop</a> Security Center
+section.</p>
+
+<h2 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Create a new rails application:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rails</span> <span class="ruby-identifier">new</span> <span class="ruby-identifier">t2_airtime</span>
+</pre>
+
+<p>Add this line to your application&#39;s Gemfile:</p>
+
+<pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;t2_airtime&#39;</span>
+</pre>
+
+<p>And then execute:</p>
+
+<pre>$ bundle</pre>
+
+<p>Create a <code>.env</code> file with the required information:</p>
+
+<pre>T2_SHOP_USER=
+T2_AIRTIME_KEY=</pre>
+
+<p>Start the server: <code>bundle exec puma -C config/puma.rb</code></p>
+
+<h3 id="label-Routes">Routes<span><a href="#label-Routes">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The following routes are mada available to your application when you mount
+the API engine in <code>config/routes.rb</code>:</p>
+
+<pre class="ruby"><span class="ruby-identifier">mount</span> <span class="ruby-constant">T2Airtime</span><span class="ruby-operator">::</span><span class="ruby-constant">Engine</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;/t2_airtime&#39;</span>
+</pre>
+<ul><li>
+<p><code>/t2_airtime/account</code> <a href="#account_info">Account
+information</a></p>
+</li><li>
+<p><code>/t2_airtime/countries</code> <a href="#country_list">List of all
+countries offered</a></p>
+</li><li>
+<p><code>/t2_airtime/countries/&lt;country_id&gt;/operators</code> <a
+href="#operator_list">List of all operators available for a certain
+country</a></p>
+</li><li>
+<p><code>/t2_airtime/countries/&lt;country_id&gt;/operators/&lt;operator_id&gt;/products</code>
+<a href="#product_list">List of all products available for a certain
+operator</a></p>
+</li><li>
+<p><code>/t2_airtime/transactions</code> <a href="#transaction_list">List all
+transactions</a></p>
+</li><li>
+<p><code>/t2_airtime/transactions/&lt;id&gt;</code> <a
+href="#transaction_show">Show a transaction</a></p>
+</li></ul>
+
+<h3 id="label-API+Object">API Object<span><a href="#label-API+Object">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>You can access the Airtime API in Ruby as:</p>
+
+<pre class="ruby"><span class="ruby-identifier">api</span> = <span class="ruby-constant">T2Airtime</span><span class="ruby-operator">::</span><span class="ruby-constant">API</span>.<span class="ruby-identifier">api</span>
+</pre>
+
+<p>The following methods are available to the <code>api</code> object:</p>
+<ul><li>
+<p><code>ping</code> <a href="#ping">Test the connection to the Airtime
+API</a></p>
+</li><li>
+<p><code>account_info</code> <a href="#account_info">Information regarding
+your TransferTo account</a></p>
+</li><li>
+<p><code>country_list</code> <a href="#country_list">Retrieve available
+countries</a></p>
+</li><li>
+<p><code>operator_list</code> <a href="#operator_list">Retrieve all operators
+available for a certain country</a></p>
+</li><li>
+<p><code>product_list</code> <a href="#product_list">Retrieve all products
+available for a certain operator</a></p>
+</li><li>
+<p><code>transaction_list</code> <a href="#transaction_list">Retrieve the list
+of transactions performed within a date range</a></p>
+</li><li>
+<p><code>transaction_info</code> <a href="#transaction_info">Retrieve
+available information on a specific transaction</a></p>
+</li><li>
+<p><code>topup</code> Recharge a destination number with a specified product.</p>
+</li><li>
+<p><code>msisdn_info</code> Retrieve various information of a specific MSISDN
+as well as the list of all products configured for your specific account
+and the destination operator of the MSISDN.</p>
+</li><li>
+<p><code>reserve_id</code> Reserve a transaction ID in the system. Maybe used
+in a topup operation.</p>
+</li><li>
+<p><code>get_id_from_key</code> Retrieve the ID of a transaction previously
+performed based on the key used in the request at that time.</p>
+</li></ul>
+
+<p>Each method returns an object with the following properties:</p>
+<ul><li>
+<p><code>success?</code> <code>true</code> if the request was successful.</p>
+</li><li>
+<p><code>status</code> The HTTP status of the reply. <code>200</code>
+indicates a successful request.</p>
+</li><li>
+<p><code>error_code</code> The error code of the request. <code>0</code>
+indicates a successful request.</p>
+</li><li>
+<p><code>error_message</code> The error message of the request.
+<code>Transaction successful</code> indicates a successful request.</p>
+</li><li>
+<p><code>url</code> The full URL of the request.</p>
+</li><li>
+<p><code>information</code> The response body as a hash.</p>
+</li><li>
+<p><code>auth_key</code> The authorization key used in the request.</p>
+</li><li>
+<p><code>headers</code> The HTTP Headers of the reply.</p>
+</li><li>
+<p><code>raw</code> The raw body of the reply.</p>
+</li></ul>
+<a name="ping"></a>
+<h4 id="label-Ping">Ping<span><a href="#label-Ping">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>This method can be used for keep-alive. To test the connection with the
+API:</p>
+
+<p>{{&lt; highlight ruby &gt;}} irb(main)&gt; response=
+T2Airtime::API.api.ping irb(main)&gt; response.success? =&gt; true {{&lt;/
+highlight &gt;}}</p>
+<a name="account_info"></a>
+<h4 id="label-Account+Information">Account Information<span><a href="#label-Account+Information">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>account_info</code> method retrieves the various information
+regarding your TransferTo account. To format the response as JSON-API you
+can call <code>T2Airtime::Account.serialize(data)</code>.</p>
+
+<p>From a Rails console (or Ruby file):</p>
+
+<p>{{&lt; highlight ruby &gt;}} irb(main)&gt; response=
+T2Airtime::API.api.account_info irb(main)&gt; account= <a
+href="T2Airtime/Account.html#method-c-serialize">T2Airtime::Account.serialize</a>
+{{&lt;/ highlight &gt;}}</p>
+
+<p>The serializer returns the following JSON representation of your account:</p>
+
+<p>{{&lt; highlight ruby &gt;}} {  “type”: “accounts”,  # Account login name 
+“id”: ACCOUNT_ID,  “attributes”: {  # Account type: “Master” (main account)
+or “Retailer” (subaccount)  “type”: ACCOUNT_TYPE  # Account login name 
+“name”: ACCOUNT_NAME,  # Account currency (USD, GBP, EUR, etc…) 
+“currency”: ACCOUNT_CURRENCY,  # For main account: returns the account’s
+remaining balance.  # For sub-account: returns the account’s remaining
+limit balance  # of the day if a daily limit is fixed. Else, returns the
+account  # remaining balance  “balance”: ACCOUNT_BALANCE,  # For main
+account: returns the total remaining balance (sum  # of all sub-accounts
+and current master).  # For sub-account:  # 1. If balance is shared and
+daily limit is fixed: returns the fixed daily limit amount  # 2. If balance
+is shared but daily limit is not fixed: returns “No Limit”  # 3. Else if
+balance is not shared: returns the remaining balance<br>  “wallet”:
+ACCOUNT_WALLET,  # The time at which the information was fetched.  # Can be
+used for caching purposes.  “fetched-at”: TIMESTAMP  } } {{&lt;/ highlight
+&gt;}}</p>
+
+<p>From a browser: <a href="/">localhost:3000/account</a></p>
+
+<p><img src="/img/account_json.png"></p>
+<a name="country_list"></a>
+<h4 id="label-Country+List">Country List<span><a href="#label-Country+List">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>country_list</code> method retrieves the countries offered in
+your TransferTo price list. To format the response as JSON-API you can call
+<code>T2Airtime::Country.serialize(data)</code>.</p>
+
+<p>From a Rails console (or Ruby file):</p>
+
+<p>{{&lt; highlight ruby &gt;}} irb(main)&gt; response=
+T2Airtime::API.api.country_list irb(main)&gt; countries= <a
+href="T2Airtime/Country.html#method-c-serialize">T2Airtime::Country.serialize</a>
+{{&lt;/ highlight &gt;}}</p>
+
+<p>The serializer returns the following JSON representation of a country:</p>
+
+<p>{{&lt; highlight ruby &gt;}} {  “type”: “countries”,  # Unique Airtime ID
+for the country  “id”: COUNTRY_ID,  “attributes”: {  # The country name 
+“name”: COUNTRY_NAME,  # The ISO 3166-1 country alpha-3, <a
+href="https://it.wikipedia.org/wiki/ISO_3166-1_alpha-3">it.wikipedia.org/wiki/ISO_3166-1_alpha-3</a>
+# Can be used for unique country identification.  “alpha3”: COUNTRY_ALPHA3,
+# The time at which the country was fetched.  # Can be used for caching
+purposes.  “fetched-at”: TIMESTAMP  },  “relationships”: {  “operators”: {
+“links”: { “related”: “/countries/COUNTRY_ID/operators” } }  } } {{&lt;/
+highlight &gt;}}</p>
+
+<p>The <code>relationships</code> section of the response provides a link you
+can use to navigate the country operators.</p>
+
+<p>From a browser: <a href="/">localhost:3000/countries</a></p>
+
+<p><img src="/img/country_list_json.png"></p>
+<a name="operator_list"></a>
+<h4 id="label-Operator+List">Operator List<span><a href="#label-Operator+List">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>operator_list</code> method retrieves the operators available for
+a certain country. To format the response as JSON-API you can call
+<code>T2Airtime::Operator.serialize(data)</code>.</p>
+
+<p>From a Rails console (or Ruby file):</p>
+
+<p>{{&lt; highlight ruby &gt;}} irb(main)&gt; response=
+T2Airtime::API.api.operator_list <a href=""id"">countries.shuffle.first</a>
+irb(main)&gt; operators= <a
+href="T2Airtime/Operator.html#method-c-serialize">T2Airtime::Operator.serialize</a>
+{{&lt;/ highlight &gt;}}</p>
+
+<p>The serializer returns the following JSON representation of an operator:</p>
+
+<p>{{&lt; highlight ruby &gt;}} {  “type”: “operators”,  # Unique Airtime ID
+for the operator  “id”: OPERATOR_ID,  “attributes”: {  # The operator name 
+“name”: OPERATOR_NAME,  # The time at which the operator was fetched.  #
+Can be used for caching purposes.<br>  “fetched-at”: TIMESTAMP  }, 
+“links”: {  # The URL at which you can retrieve the operator&#39;s logo 
+logo: OPERATOR_LOGO_URL  },  “relationships”: {  “country”: { “data”: {
+“type”: “countries”, “id”: COUNTRY_ID } },  “products”: { “links”: {
+“related”: “/countries/COUNTRY_ID/operators/OPERATOR_ID/products” } }<br> 
+},  “included”: [ { “type”: “countries”, “id”: COUNTRY_ID, “attributes”: {
+“name”: COUNTRY_NAME,#&lt;RDoc::Markup::HardBreak:0x00000001aa2700&gt;
+“alpha3”: COUNTRY_ALPHA3 }#&lt;RDoc::Markup::HardBreak:0x00000001aa2700&gt;
+} ] } {{&lt;/ highlight &gt;}}</p>
+<ul><li>
+<p>The <code>relationships</code> section of the response provides a link you
+can use to navigate the operator products.</p>
+</li><li>
+<p>The <code>included</code> section of the response provides all the
+information regarding the operator&#39;s country.</p>
+</li></ul>
+
+<p>From a browser: <a
+href="/">localhost:3000/countries/COUNTRY_ID/operators</a></p>
+
+<p><img src="/img/operator_list_json.png"></p>
+<a name="product_list"></a>
+<h4 id="label-Product+List">Product List<span><a href="#label-Product+List">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>product_list</code> method retrieves the products available for a
+certain operator. To format the response as JSON-API you can call
+<code>T2Airtime::Product.serialize(data)</code>.</p>
+
+<p>From a Rails console (or Ruby file):</p>
+
+<p>{{&lt; highlight ruby &gt;}} irb(main)&gt; response=
+T2Airtime::API.api.product_list <a href=""id"">operators.shuffle.first</a>
+irb(main)&gt; products= <a
+href="T2Airtime/Product.html#method-c-serialize">T2Airtime::Product.serialize</a>
+{{&lt;/ highlight &gt;}}</p>
+
+<p>The serializer returns the following JSON representation of a product:</p>
+
+<p>{{&lt; highlight ruby &gt;}} {  “type”: “products”,  # Airtime ID for the
+product. Attention! It is only unique within  # the scope of the operator 
+“id”: PRODUCT_ID,  “attributes”: {  # The product name, or face value for
+display, es. 5EUR  “name”: PRODUCT_NAME,  # Currency of the destination
+country  “currency”: PRODUCT_CURRENCY,  # The face value of the product
+(same as id)  “local-price”: PRODUCT_LOCAL_PRICE,  # The retail price of
+the product  “retail-price”: PRODUCT_RETAIL_PRICE,  # The wholesale price
+(also known as your cost) of the product  “wholesale-price”:
+PRODUCT_WHOLESALE_PRICE,<br>  # The time at which the operator was fetched.
+# Can be used for caching purposes.<br>  “fetched-at”: TIMESTAMP  }, 
+“relationships”: {  “country”: { “data”: { “type”: “countries”, “id”:
+COUNTRY_ID } },  “operator”: { “data”: { “type”: “operators”, “id”:
+OPERATOR_ID } }  },  “included”: [ { “type”: “countries”, “id”: COUNTRY_ID,
+“attributes”: { “name”: COUNTRY_NAME, “alpha3”: COUNTRY_ALPHA3
+}#&lt;RDoc::Markup::HardBreak:0x00000001aa2700&gt; }, { “type”:
+“operators”, “id”: OPERATOR_ID, “attributes”: { “name”: OPERATOR_NAME },
+“links”: { “logo”: OPERATOR_LOGO_URL
+}#&lt;RDoc::Markup::HardBreak:0x00000001aa2700&gt; } ]  } } {{&lt;/
+highlight &gt;}}</p>
+<ul><li>
+<p>The <code>relationships</code> section of the response provides a link you
+can use to navigate the product <code>included</code> relationships.</p>
+</li><li>
+<p>The <code>included</code> section of the response provides all the
+information regarding the product&#39;s country and operator.</p>
+</li></ul>
+
+<p>From a browser: <a
+href="/">localhost:3000/countries/COUNTRY_ID/operators/OPERATOR_ID/products</a></p>
+
+<p><img src="/img/product_list_json.png"></p>
+<a name="transaction_list"></a>
+<h4 id="label-Transaction+List">Transaction List<span><a href="#label-Transaction+List">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>transaction_list</code> method retrieves all transaction within
+the specified time-range. To format the response as JSON-API you can call
+<code>T2Airtime::Transaction.serialize(data)</code>.</p>
+
+<p>From a Rails console (or Ruby file):</p>
+
+<p>{{&lt; highlight ruby &gt;}} irb(main)&gt; response=
+T2Airtime::API.api.transaction_list irb(main)&gt; transactions= <a
+href="T2Airtime/Transaction.html#method-c-serialize">T2Airtime::Transaction.serialize</a>
+{{&lt;/ highlight &gt;}}</p>
+
+<p>From a browser: <a href="/">localhost:3000/transactions</a></p>
+
+<p><img src="/img/transaction_list_json.png"></p>
+<a name="transaction_info"></a>
+<h4 id="label-Transaction+Information">Transaction Information<span><a href="#label-Transaction+Information">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>transaction_info</code> method retrieves information regarding a
+certain transaction. To format the response as JSON-API you can call
+<code>T2Airtime::Transaction.serialize_one(data)</code>.</p>
+
+<p>From a Rails console (or Ruby file):</p>
+
+<p>{{&lt; highlight ruby &gt;}} irb(main)&gt; response=
+T2Airtime::API.api.transaction_info irb(main)&gt; transactions= <a
+href="T2Airtime/Transaction.html#method-c-serialize_one">T2Airtime::Transaction.serialize_one</a>
+{{&lt;/ highlight &gt;}}</p>
+
+<p>The serializer returns the following JSON representation of a transaction:</p>
+
+<p>{{&lt; highlight ruby &gt;}} {  type: “transactions”,  # Unique Airtime ID
+for the transaction  id: TRANSACTION_ID,  attributes: {  # The
+international phone number or name of  # the user (sender) requesting to
+credit a phone  # number  “msisdn”: TRANSACTION_MSISDN,  # Destination
+MSISDN (usually recipient phone number)  “destination-msisdn”:
+TRANSACTION_DESTINATION_MSISDN,  # Authentication key used during the
+transaction  “transaction-authentication-key”:
+TRANSACTION_AUTHENTICATION_KEY,  # Error code for the transaction 
+“transaction-error-code”: TRANSACTION_ERROR_CODE,  # Description of the
+error code for the transaction  “transaction-error-txt”:
+TRANSACTION_ERROR_TEXT,  # Reference of the operator (returned only if
+available)  “reference-operator”: TRANSACTION_REFERENCE_OPERATOR,  #
+Returns the value requested to the operator  # (equals to product_requested
+in case of successful  # transaction). It equals to 0 when Top-up  #
+failed.  “actual-product-sent”: TRANSACTION_PRODUCT_SENT,  # Recipient SMS 
+# Returns the custom message appended to the  # default notification SMS
+sent to the recipient  “sms”: TRANSACTION_SMS,  # Value of the customized
+field cid1 sent in the Top-up request  “cid1”: TRANSACTION_CID1,  # Value
+of the customized field cid2 sent in the Top-up request  “cid2”:
+TRANSACTION_CID2,  # Value of the customized field cid3 sent in the Top-up
+request  “cid3”: TRANSACTION_CID3,  # Date of the transaction (GMT) 
+“date”: TRANSACTION_DATE,  # Currency of the account from which the
+transaction is requested  “originating-currency”:
+TRANSACTION_ORIGINATING_CURRENCY,  # Currency of the destination country 
+“destination-currency”: TRANSACTION_DESTINATION_CURRENCY,  # Type of
+product returned (“Yes”, default “No” if not set)  “pin-based”:
+TRANSACTION_PIN_BASED,  # Final amount received by recipient. Indicative
+value only  “local-info-amount”: TRANSACTION_LOCAL_INFO_AMOUNT,  # Local
+currency in destination  “local-info-currency”:
+TRANSACTION_LOCAL_INFO_CURRENCY,  # Value of the transaction before tax and
+service  # fee in local currency.  “local-info-amount”:
+TRANSACTION_LOCAL_INFO_AMOUNT,  # The time at which the transaction was
+fetched.  # Can be used for caching purposes.<br>  “fetched-at”: TIMESTAMP 
+},  relationships: {  country: { data: { type: “countries”, id: COUNTRY_ID
+} },  operator: { data: { type: “operators”, id: OPERATOR_ID } },  product:
+{ data: { type: “products”, id: PRODUCT_ID } }  },  included: [ { type:
+“countries”, id: COUNTRY_ID, attributes: { “name”: COUNTRY_NAME, “alpha3”:
+COUNTRY_ALPHA3 }#&lt;RDoc::Markup::HardBreak:0x00000001aa2700&gt; }, {
+type: “operators”, id: OPERATOR_ID, attributes: { “name”: OPERATOR_NAME },
+links: { logo: OPERATOR_LOGO_URL
+}#&lt;RDoc::Markup::HardBreak:0x00000001aa2700&gt; }, { type: “products”,
+id: PRODUCT_ID, attributes: { “name”: PRODUCT_NAME, “currency”:
+PRODUCT_CURRENCY, “wholesale-price”: PRODUCT_WHOLESALE_PRICE,
+“retail-price”: PRODUCT_RETAIL_PRICE, “local-price”: PRODUCT_LOCAL_PRICE
+}#&lt;RDoc::Markup::HardBreak:0x00000001aa2700&gt; } ] } {{&lt;/ highlight
+&gt;}}</p>
+<ul><li>
+<p>The <code>relationships</code> section of the response provides a link you
+can use to navigate the product <code>included</code> relationships.</p>
+</li><li>
+<p>The <code>included</code> section of the response provides all the
+information regarding the product&#39;s country and operator.</p>
+</li></ul>
+
+<p>From a browser: <a href="/">localhost:3000/transactions/TRANSACTION_ID</a></p>
+
+<p><img src="/img/transaction_list_json.png"></p>
+
+<h2 id="label-Testing">Testing<span><a href="#label-Testing">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Clone this repository and export your secrets:</p>
+
+<pre>$&gt; export T2_SHOP_USER=
+$&gt; export T2_AIRTIME_KEY=</pre>
+
+<p>Execute:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rake</span>
+</pre>
+
+<p>To execute the test application:</p>
+
+<pre class="ruby"><span class="ruby-identifier">cd</span> <span class="ruby-identifier">spec</span><span class="ruby-operator">/</span><span class="ruby-identifier">dummy</span>
+</pre>
+
+<p>Start the server: <code>puma -C config/puma.rb</code></p>
+
+<h2 id="label-Contributing">Contributing<span><a href="#label-Contributing">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Bug reports and pull requests are welcome on GitHub at <a
+href="https://github.com/matteolc/t2_airtime">github.com/matteolc/t2_airtime</a>.</p>
+
+<h2 id="label-License">License<span><a href="#label-License">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The gem is available as open source under the terms of the <a
+href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

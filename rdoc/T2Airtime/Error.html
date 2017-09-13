@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class T2Airtime::Error - T2Airtime</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">StandardError
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-T2Airtime::Error">
+  <h1 id="class-T2Airtime::Error" class="class">
+    class T2Airtime::Error
+  </h1>
+
+  <section class="description">
+    
+<p>0     <a href="Transaction.html">Transaction</a> successful                
+Indicates the Top-up was successfully delivered to the recipient. 101      
+Destination MSISDN out of range                                            
+Numbering plan not recognized: the destination/recipient number was not
+identified as to belonging to any operators covered by TransferTo. Re-check
+recipient number and/or escalate the case to the TransferTo Support Team
+for further investigation. 104         MSISDN in blacklist                 
+Here MSISDN refers to both sender and recipient phone numbers which are
+blacklisted due to fraudulent activities. 105         Not enough credit on
+your account                                                               
+<a href="Transaction.html">Transaction</a> failed due to insufficient funds
+in your account&#39;s prepaid balance. Please reload balance and try again.
+200         <a href="Transaction.html">Transaction</a> canceled by Customer</p>
+
+<p>202         <a href="Transaction.html">Transaction</a> canceled by
+TransferTo</p>
+
+<p>203         <a href="Transaction.html">Transaction</a> incomplete          
+<a href="Transaction.html">Transaction</a> failed due to a technical issue.
+Please contact TransferTo Support Team for further investigation. 204      
+Destination <a href="Account.html">Account</a> is not prepaid or not valid 
+<a href="Transaction.html">Transaction</a> refused by the operator because
+the recipient phone number is not a valid prepaid account. 207         <a
+href="Transaction.html">Transaction</a> amount limit exceeded              
+Here limit refers to maximum amount defined for the destination MSISDN.
+There are some limitations set on the operator&#39;s side, not controlled
+by TransferTo. When one of these limits is reached, error code 207 will be
+returned. Some examples:</p>
+
+<pre>• Indosat Indonesia operator&#39;s end, the customer must wait at least 5 mins before sending another transfer to the same recipient account. 
+• Indian operators&#39; end, the customer must wait 3 mins before sending another transfer of the same amount to the same recipient account. 
+• Orange Africa, the recipient account is limited to a maximum rechargeable amount of 30 Euros per week and 60 Euros per month.</pre>
+
+<p>213         Duplicated transaction                                         
+<a href="Transaction.html">Transaction</a> refused because it was submitted
+too closely after a preceding Top-up attempt. 214         Topup refused    
+<a href="Transaction.html">Transaction</a> refused by the operator for a
+reason that was not specified. Common reasons for these types of failures
+are: Recipient number not valid for recharge. Service outage temporarily
+faced on the operator. Please try again at a later time and/or contact the
+TransferTo Support Team if the problem persists. 215         Service to
+this destination operator is                        <a
+href="Transaction.html">Transaction</a> failed due to an outage and/or
+connection issue with the operator. Please try again at a later time and/or
+contact the TransferTo Support Team if the problem persists.</p>
+
+<pre class="ruby"><span class="ruby-identifier">temporarily</span> <span class="ruby-identifier">unavailable</span>
+</pre>
+
+<p>216         Destination number not activated                               
+<a href="Transaction.html">Transaction</a> refused by the operator because
+the recipient number has not been activated. 217         Destination number
+expired                                                                    
+<a href="Transaction.html">Transaction</a> refused by the operator because
+the recipient number is no longer an active account. 218         <a
+href="Request.html">Request</a> timeout                                    
+<a href="Transaction.html">Transaction</a> timed-out and failed because of
+the long processing duration. Please try again at a later time and/or
+contact the TransferTo Support Team if the problem persists. 219        
+Key does not exist                                                         
+<a href="Request.html">Request</a> failed because the key provided does not
+exist (error returned for get_id_from_key method requests only). 221       
+Fraud suspicion                                                            
+<a href="Transaction.html">Transaction</a> refused and the recipient number
+flagged for suspicion of fraud, due to the number of consecutive Top-up
+requests within a short gap of time. The recipient phone number will be
+locked out from receiving any Top-up for a certain period of time, after
+which, the restriction will be automatically released. 222         Number
+barred from refill                                                         
+This error code is returned when the recipient has been blocked from refill
+directly by the recipient&#39;s operator. It prevents TransferTo system
+from reloading his account. Recipient must call the operator’s customer
+service to unblock it. 223         ID not reserved                         
+<a href="Transaction.html">Transaction</a> failed because the transaction
+ID specified in the request was not previously reserved. 224        
+Invalid length of destination MSISDN                                       
+<a href="Transaction.html">Transaction</a> failed because the recipient
+number length does not match (shorter or longer) the mobile number format
+of the country. 230         Recipient reached maximum topup number         
+This error is returned when a recipient reaches the maximum number of
+Top-up allowable in a certain gap of time.</p>
+
+<pre>• 01 Day(s) =&gt; 10 
+• 07 Day(s) =&gt; 15
+• 30 Day(s) =&gt; 40</pre>
+
+<p>231         Recipient reached maximum topup amount                         
+This error is returned when a recipient reaches the maximum amount (in USD)
+of Top-up allowable in a certain gap of time.</p>
+
+<pre>• 01 Day(s) =&gt; max 100 USD                                                        
+• 07 Day(s) =&gt; max 150 USD                                                         
+• 30 Day(s) =&gt; max 200 USD</pre>
+
+<p>232         <a href="Account.html">Account</a> reached maximum topup number
+This error is returned when your account has reached its maximum number of
+Top-up allowable in a certain gap of time. 233         <a
+href="Account.html">Account</a> reached maximum topup amount               
+This error is returned when your account has reached its maximum amount (in
+USD) of Top-up allowable in a certain gap of time. 241         <a
+href="Account.html">Account</a> reached maximum daily topup amount         
+This error is returned when your account has reached its maximum amount (in
+USD) of Top-up allowable within a day. 242         <a
+href="Account.html">Account</a> reached maximum daily topup number         
+This error is returned when your account has reached its maximum number of
+Top-up allowable within a day.  243         <a
+href="Account.html">Account</a> reached maximum weekly topup amount        
+This error is returned when your account has reached its maximum amount (in
+USD) of Top-up allowable within a week. 244   <a
+href="Account.html">Account</a> reached maximum weekly topup number        
+This error is returned when your account has reached its maximum number of
+Top-up allowable within a week. 245         <a
+href="Account.html">Account</a> reached maximum monthly topup amount       
+This error is returned when your account has reached its maximum amount (in
+USD) of Top-up allowable within a month. 246         <a
+href="Account.html">Account</a> reached maximum monthly topup number       
+This error is returned when your account has reached its maximum number of
+Top-up allowable within a month. 251         Sender reached maximum daily
+topup amount                                      This error is returned
+when the sender has reached its maximum amount (in USD) of Top-up allowable
+within a day. 252         Sender reached maximum daily topup number        
+This error is returned when the sender has reached its maximum number of
+Top-up allowable within a day. 253         Sender reached maximum weekly
+topup amount                             This error is returned when the
+sender has reached its maximum amount (in USD) of Top-up allowable within a
+week. 254         Sender reached maximum weekly topup number               
+This error is returned when the sender has reached its maximum number of
+Top-up allowable within a week. 255         Sender reached maximum monthly
+topup amount                            This error is returned when the
+sender has reached its maximum amount (in USD) of Top-up allowable within a
+month. 256         Sender reached maximum monthly topup number             
+This error is returned when the sender has reached its maximum number of
+Top-up allowable within a day month. 301         Denomination not available
+Denomination not available for this destination. 310         Denomination
+blocked                                                                    
+<a href="Transaction.html">Transaction</a> failed because the Top-up is no
+longer available on the operator&#39;s offer or on the account. 320        
+Requested amount out of range                                              
+<a href="Transaction.html">Transaction</a> failed because the Top-amount
+request was not within the range of valid amounts. 321         Requested
+currency not allowed for this account                <a
+href="Transaction.html">Transaction</a> failed because the currency
+specified is not valid for the account. 401         <a
+href="Transaction.html">Transaction</a> ID not found or was not made       
+No transaction was found with the ID specified (error returned for
+trans_info method requests only).</p>
+
+<pre class="ruby"><span class="ruby-identifier">by</span> <span class="ruby-identifier">your</span> <span class="ruby-identifier">account</span>
+</pre>
+
+<p>777         Insufficient balance in your master account                    
+<a href="Transaction.html">Transaction</a> failed because there are not
+enough funds in your master account. 888         Insufficient balance in
+your subaccount                                                <a
+href="Transaction.html">Transaction</a> failed because there are not enough
+funds in your sub-account. 900         Not enough information to process
+the topup                            <a
+href="Transaction.html">Transaction</a> failed because some of the required
+fields in your Top-up request are missing/empty. 901         Invalid action
+<a href="Transaction.html">Transaction</a> failed because the action
+specified in &lt;action&gt; field of the request is not valid. 902        
+Invalid input_currency  903         Invalid output_currency</p>
+
+<p>904         Invalid input_value</p>
+
+<p>905         Invalid start_date</p>
+
+<p>906         Invalid stop_date</p>
+
+<p>907         Invalid transaction ID                                         
+<a href="Transaction.html">Transaction</a> ID specified in the
+&lt;reserved_id&gt; of the Top-up request is not valid. 908         <a
+href="Account.html">Account</a> not configured for this service            
+<a href="Transaction.html">Transaction</a> failed because the account is
+not configured to carry out the requested action. 909         Invalid flag 
+<a href="Transaction.html">Transaction</a> failed because the request
+included an invalid field/parameter. 919         All required argument not
+received                                                             <a
+href="Transaction.html">Transaction</a> failed because the request is
+missing a mandatory field/parameter. 921         Wrong MD5 encoding        
+<a href="Transaction.html">Transaction</a> failed because the MD5 hash was
+not correct. Typically indicates that the password is incorrect. 922       
+Originating IP not allowed                                                 
+<a href="Transaction.html">Transaction</a> failed because the request
+originated from an IP that is not whitelisted for the account. 923        
+Key already used or invalid key value                                      
+<a href="Transaction.html">Transaction</a> failed because the key value
+included in the request was not unique and greater than the previous key
+used. 926         <a href="Account.html">Account</a> not active            
+Please contact your <a href="Account.html">Account</a> Manager.</p>
+
+<p>995         <a href="Account.html">Account</a> not found                   
+Please enter and use a correct login.</p>
+
+<p>998         System not available. Please retry later.                      
+<a href="Transaction.html">Transaction</a> failed due to technical issues.
+Please contact TransferTo Support Team for further investigation. 999      
+Unknown error                                                              
+To be escalated to the TransferTo Support Team for further investigation.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-code" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">code</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(code, message=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/t2_airtime/errors.rb, line 80</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">code</span>, <span class="ruby-identifier">message</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-ivar">@code</span> = <span class="ruby-identifier">code</span>.<span class="ruby-identifier">to_i</span>
+  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">message</span>)    
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
