@@ -16,7 +16,8 @@ Rails.application.configure do
   if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
 
-    config.cache_store = :memory_store
+    # config.cache_store = :memory_store
+    config.cache_store = :file_store, File.join(Dir.pwd, 'tmp', 'cache')
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.seconds.to_i}"
     }
@@ -33,7 +34,6 @@ Rails.application.configure do
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
-
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true

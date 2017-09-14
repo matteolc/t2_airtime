@@ -2,16 +2,17 @@ require_relative 'boot'
 
 # Pick the frameworks you want:
 # require "active_record/railtie"
-require "action_controller/railtie"
-require "action_view/railtie"
-require "action_mailer/railtie"
-require "active_job/railtie"
-require "action_cable/engine"
-require "rails/test_unit/railtie"
-require "sprockets/railtie"
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'action_mailer/railtie'
+require 'active_job/railtie'
+require 'action_cable/engine'
+require 'rails/test_unit/railtie'
+require 'sprockets/railtie'
+require 'rack/cors'
 
 Bundler.require(*Rails.groups)
-require "t2_airtime"
+require 't2_airtime'
 
 module Dummy
   class Application < Rails::Application
@@ -26,6 +27,16 @@ module Dummy
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # Rack::Cors provides support for Cross-Origin Resource Sharing (CORS)
+    # for Rack compatible web applications.
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*',
+                 headers: :any,
+                 methods: %i[get post options]
+      end
+    end
   end
 end
-

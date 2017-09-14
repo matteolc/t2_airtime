@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount T2Airtime::Engine => "/t2_airtime"
+  mount T2Airtime::Engine => '/'
 end
