@@ -16,7 +16,7 @@ module T2Airtime
     end
 
     def show
-      @transaction = T2Airtime::API.api.transaction_info(params[:id])
+      @transaction = T2Airtime::Transaction.get(params[:id])
       if @transaction.success?
         render_data T2Airtime::Transaction.serialize_one @transaction.data,
                                                          @transaction.headers[:date]

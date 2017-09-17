@@ -75,7 +75,9 @@ module T2Airtime
     # “sms” of the topup method.
 
     def topup(msisdn, destination_msisdn, product, method = 'topup',
-              reserved_id = nil, send_sms = true, sms = nil, sender_text = nil, operator_id = nil,
+              reserved_id = nil, send_sms = true, sms = nil, sender_text = nil,
+              cid1 = '', cid2 = '', cid3 = '',
+              operator_id = nil,
               return_service_fee = 1, delivered_amount_info = 1, return_timestamp = 1, return_version = 1,
               return_promo = 0)
 
@@ -86,7 +88,7 @@ module T2Airtime
       }
       self.oid = operator_id
 
-      @params.merge(cid1: '', cid2: '', cid3: '',
+      @params.merge(cid1: cid1, cid2: cid2, cid3: cid3,
                     reserved_id: reserved_id,
                     sender_sms: (sender_text ? 'yes' : 'no'),
                     send_sms: (send_sms ? 'yes' : 'no'),
@@ -99,26 +101,6 @@ module T2Airtime
                     return_promo: return_promo)
 
       run_action method
-      # {
-      #  requesting_msisdn:         response[:msisdn],
-      #  destination_msisdn:        response[:destination_msisdn],
-      #  product_sent:              response[:actual_product_sent].to_i,
-      #  local_amount:              response[:local_info_amount],
-      #  local_value:               response[:local_info_value],
-      #  local_currency_code:       response[:local_info_currency],
-      #  transaction_status:        response[:error_txt],
-      #  operation_result:          response[:error_code],
-      #  operation_info:            response[:info_txt],
-      #  transaction_api_id:        response[:transactionid].to_i,
-      #  country_api_id:            response[:countryid].to_i,
-      #  operator_api_id:           response[:operatorid].to_i,
-      #  product_api_id:            response[:product_requested].to_i,
-      #  originator_currency_code:  response[:originating_currency],
-      #  destination_currency_code: response[:destination_currency],
-      #  wholesale_price:           response[:wholesale_price],
-      #  retail_price:              response[:retail_price],
-      #  service_fee:               response[:service_fee]
-      # }
     end
 
     # This method is used to retrieve various information of a specific MSISDN
@@ -194,11 +176,13 @@ module T2Airtime
     # ---------
     # Defines the end date of the search (included). Format must be YYYY-MM-DD.
     def transaction_list(start = (Time.now - 24.hours), stop = Time.now, msisdn = nil, destination = nil, code = nil)
-      @params[:code]               = code unless code
-      @params[:msisdn]             = msisdn unless msisdn
-      @params[:stop_date]          = to_yyyymmdd(stop)
-      @params[:start_date]         = to_yyyymmdd(start)
-      @params[:destination_msisdn] = destination unless destination
+      @params = {
+        stop_date: to_yyyymmdd(stop),
+        start_date: to_yyyymmdd(start)
+      }     
+      code && !code.empty? && @params[:code] = code
+      msisdn && !msisdn.empty? && @params[:msisdn] = msisdn
+      destination && !destination.empty? && @params[:destination_msisdn] = destination    
       run_action :trans_list
     end
 

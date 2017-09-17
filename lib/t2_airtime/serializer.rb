@@ -1,4 +1,69 @@
 module T2Airtime
+
+  class Topup
+
+    def self.serialize(data, ts = Time.zone.now.to_s)
+      {
+        type: 'topup',
+        balance: data[:balance],
+        balanceDisplay: "#{Money.new(Integer(data[:balance]) * 100, Account.currency).format}",
+        msisdn: data[:destination_msisdn],
+        destinationMsisdn: data[:destination_msisdn],
+        transactionId: data[:transactionid],
+        transactionAuthenticationKey: data[:authentication_key],
+        transactionErrorCode: Integer(data[:error_code]),
+        transactionErrorTxt: data[:error_txt],
+        referenceOperator: data[:reference_operator],
+        actualProductSent: data[:actual_product_sent],
+        sms: data[:sms],
+        smsSent: data[:sms_sent],
+        cid1: data[:cid1],
+        cid2: data[:cid2],
+        cid3: data[:cid3],
+        currency: data[:originating_currency],
+        localCurrency: data[:destination_currency],
+        countryId: Integer(data[:countryid]), 
+        countryName: data[:country],
+        operatorId: Integer(data[:operatorid]),
+        operatorName: data[:operator],
+        operatorLogo: T2Airtime::Util.operator_logo_url(data[:operatorid]),  
+        productName: "#{Money.new(Integer(data[:product_requested]) * 100, data[:destination_currency]).format}",
+        productLocalCurrency: data[:destination_currency],
+        productLocalCurrencySymbol: Money::Currency.new(data[:destination_currency]).symbol,
+        productCurrency: Account.currency,
+        productCurrencySymbol: Money::Currency.new(Account.currency).symbol,
+        productLocalPrice: Float(data[:product_requested]),
+        productRetailPrice: Float(data[:retail_price]),
+        productWholesalePrice: Float(data[:wholesale_price]),  
+        executedAt: T2Airtime::Util.format_time(ts)
+      }
+    end
+
+  end
+
+
+  class Msisdn
+
+    def self.info(msisdn)
+      Rails.cache.fetch("msisdn/#{msisdn}", expires_in: 24.hours) do # cache the result for 1 day
+        T2Airtime::API.api.msisdn_info(msisdn)
+      end
+    end
+
+    def self.serialize(data, ts = Time.zone.now.to_s)
+      {
+        type: 'msisdn',
+        msisdn: data[:destination_msisdn],
+        country: data[:country],
+        countryId: data[:countryid],
+        operator: data[:operator],
+        operatorId: data[:operatorid],
+        fetchedAt: T2Airtime::Util.format_time(ts)
+      }
+    end
+
+  end
+
   class Account
     def self.get
       Rails.cache.fetch('accounts', expires_in: 1.hour) do
@@ -7,8 +72,9 @@ module T2Airtime
     end
 
     def self.currency
-      Rails.cache.fetch('accounts/currency', expires_in: 24.hours) do        
-        serialize(get.data)["attributes"]["currency"]
+      account = serialize(get.data)
+      Rails.cache.fetch('accounts/currency', expires_in: 24.hours) do # cache the result for 1 day        
+        account[:attributes][:currency]
       end      
     end
 
@@ -56,6 +122,7 @@ module T2Airtime
             attributes: {
               name: names[n],
               alpha3: alpha3(names[n]),
+              callingCode: calling_code(alpha3(names[n])),
               fetchedAt: T2Airtime::Util.format_time(ts)
             }
           }
@@ -92,6 +159,17 @@ module T2Airtime
         name: name
       )
     end
+
+    def self.calling_code(alpha3)  
+      country_code = case alpha3
+          when 'PCN'
+            '64'
+          when 'ATF'
+            '262'            
+      end
+      country_code || ISO3166::Country.find_country_by_alpha3(alpha3).try(:country_code)       
+    end
+
   end
 
   class Operator
@@ -153,9 +231,7 @@ module T2Airtime
     def self.take(operator_qty = 1, qty = 5)
       operators = T2Airtime::Operator.take(operator_qty).shuffle
       unless operators.empty?
-        operators.flat_map do |operator| (
-
-          
+        operators.flat_map do |operator| (          
           products = all(operator['id'])
           products.success? ? serialize(products.data, products.headers[:date], qty) : []
         )
@@ -222,73 +298,81 @@ module T2Airtime
       ids.take(qty.nil? ? ids.count : qty).each.map { |id| show(id) }
     end
 
+    def self.get(id)
+      Rails.cache.fetch("transactions/#{id}", expires_in: 365.days) do # once we've got it, no need to refetch
+        T2Airtime::API.api.transaction_info(id)
+      end
+    end    
+
     def self.show(id)
-      reply = T2Airtime::API.api.transaction_info(id)
-      reply.success? ? serialize_one(reply.data, reply.headers[:date]) : {}
+      transaction = get(id)
+      transaction.success? ? serialize_one(transaction.data, transaction.headers[:date]) : {}
     end
 
     def self.serialize_one(data, ts = Time.zone.now.to_s)
-      {
-        type: 'transactions',
-        id: Integer(data[:transactionid]),
-        attributes: {
-          msisdn: data[:msisdn],
-          destinationMsisdn: data[:destination_msisdn],
-          transactionAuthenticationKey: data[:transaction_authentication_key],
-          transactionErrorCode: Integer(data[:transaction_error_code]),
-          transactionErrorTxt: data[:transaction_error_txt],
-          referenceOperator: data[:reference_operator],
-          actualProductSent: data[:actual_product_sent],
-          sms: data[:sms],
-          cid1: data[:cid1],
-          cid2: data[:cid2],
-          cid3: data[:cid3],
-          date: data[:date],
-          currency: data[:originating_currency],
-          localCurrency: data[:destination_currency],
-          pinBased: data[:pin_based],
-          localInfoAmount: data[:local_info_amount],
-          localInfoCurrency: data[:local_info_currency],
-          localInfoValue: data[:local_info_value],
-          errorCode: data[:error_code],
-          errorTxt: data[:error_txt],
-          countryId: Integer(data[:countryid]), 
-          countryName: data[:country],
-          countryAlpha3: T2Airtime::Country.alpha3(data[:country]),
-          operatorId: Integer(data[:operatorid]),
-          operatorName: data[:operator],
-          operatorLogo: T2Airtime::Util.operator_logo_url(data[:operatorid]),  
-          productName: "#{Money.new(Integer(data[:product_requested]) * 100, data[:destination_currency]).format}",
-          productLocalCurrency: data[:destination_currency],
-          productLocalCurrencySymbol: Money::Currency.new(data[:destination_currency]).symbol,
-          productCurrency: Account.currency,
-          productCurrencySymbol: Money::Currency.new(Account.currency).symbol,
-          productLocalPrice: Float(data[:product_requested]),
-          productRetailPrice: Float(data[:retail_price]),
-          productWholesalePrice: Float(data[:wholesale_price]),          
-          fetchedAt: T2Airtime::Util.format_time(ts)
-        },
-        relationships: {
-          country: {
-            data: {
-              type: 'countries',
-              id: Integer(data[:countryid])
-            }
+      Rails.cache.fetch("transactions/#{data[:transactionid]}/serializer", expires_in: 365.hour) do
+        {
+          type: 'transactions',
+          id: Integer(data[:transactionid]),
+          attributes: {
+            msisdn: data[:msisdn],
+            destinationMsisdn: data[:destination_msisdn],
+            transactionAuthenticationKey: data[:transaction_authentication_key],
+            transactionErrorCode: Integer(data[:transaction_error_code]),
+            transactionErrorTxt: data[:transaction_error_txt],
+            referenceOperator: data[:reference_operator],
+            actualProductSent: data[:actual_product_sent],
+            sms: data[:sms],
+            cid1: data[:cid1],
+            cid2: data[:cid2],
+            cid3: data[:cid3],
+            date: data[:date],
+            currency: data[:originating_currency],
+            localCurrency: data[:destination_currency],
+            pinBased: data[:pin_based],
+            localInfoAmount: data[:local_info_amount],
+            localInfoCurrency: data[:local_info_currency],
+            localInfoValue: data[:local_info_value],
+            errorCode: data[:error_code],
+            errorTxt: data[:error_txt],
+            countryId: Integer(data[:countryid]), 
+            countryName: data[:country],
+            countryAlpha3: T2Airtime::Country.alpha3(data[:country]),
+            operatorId: Integer(data[:operatorid]),
+            operatorName: data[:operator],
+            operatorLogo: T2Airtime::Util.operator_logo_url(data[:operatorid]),  
+            productName: "#{Money.new(Integer(data[:product_requested]) * 100, data[:destination_currency]).format}",
+            productLocalCurrency: data[:destination_currency],
+            productLocalCurrencySymbol: Money::Currency.new(data[:destination_currency]).symbol,
+            productCurrency: Account.currency,
+            productCurrencySymbol: Money::Currency.new(Account.currency).symbol,
+            productLocalPrice: Float(data[:product_requested]),
+            productRetailPrice: Float(data[:retail_price]),
+            productWholesalePrice: Float(data[:wholesale_price]),          
+            fetchedAt: T2Airtime::Util.format_time(ts)
           },
-          operator: {
-            data: {
-              type: 'operators',
-              id: Integer(data[:operatorid])
-            }
-          },
-          product: {
-            data: {
-              type: 'products',
-              id: Integer(data[:product_requested])
+          relationships: {
+            country: {
+              data: {
+                type: 'countries',
+                id: Integer(data[:countryid])
+              }
+            },
+            operator: {
+              data: {
+                type: 'operators',
+                id: Integer(data[:operatorid])
+              }
+            },
+            product: {
+              data: {
+                type: 'products',
+                id: Integer(data[:product_requested])
+              }
             }
           }
         }
-      }
+      end
     end
   end
 end
