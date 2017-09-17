@@ -17,6 +17,7 @@ module T2Airtime
         actualProductSent: data[:actual_product_sent],
         sms: data[:sms],
         smsSent: data[:sms_sent],
+        smsText: data[:sender_text],
         cid1: data[:cid1],
         cid2: data[:cid2],
         cid3: data[:cid3],
