@@ -111,12 +111,12 @@ module T2Airtime
       countries.success? ? serialize(countries.data, countries.headers[:date], qty) : []
     end
 
-    def self.serialize(data, ts = Time.zone.now.to_s, qty = nil)
+    def self.serialize(data, ts = Time.zone.now.to_s, qty = 'all')
       return [] if data[:countryid].nil?
       names = data[:country].split(',')
       ids = data[:countryid].split(',')
       Rails.cache.fetch('countries/serializer', expires_in: 1.hour) do
-        ids.take(qty.nil? ? ids.count : qty).each_with_index.map do |id, n|
+        ids.take(qty==='all' ? ids.count : qty).each_with_index.map do |id, n|
           {
             type: 'countries',
             id: Integer(id),
@@ -180,23 +180,23 @@ module T2Airtime
       end
     end
 
-    def self.take(country_qty = 1, qty = 5)
+    def self.take(qty = 5, country_qty = 1)
       countries = T2Airtime::Country.take(country_qty).shuffle
       unless countries.empty?
         countries.flat_map do |country| (          
-          operators = all(country['id'])
+          operators = all(country[:id])
           operators.success? ? serialize(operators.data, operators.headers[:date], qty) : []
         )
         end
       end
     end
 
-    def self.serialize(data, ts = Time.zone.now.to_s, qty = nil)
+    def self.serialize(data, ts = Time.zone.now.to_s, qty = 'all')
       return [] if data[:operator].nil?
       names = data[:operator].split(',')
       ids = data[:operatorid].split(',')
       Rails.cache.fetch("operators/#{data[:countryid]}/serializer", expires_in: 1.hour) do
-        ids.take(qty.nil? ? ids.count : qty).each_with_index.map do |id, n|
+        ids.take(qty==='all' ? ids.count : qty).each_with_index.map do |id, n|
           {
             type: 'operators',
             id: Integer(id),
@@ -229,24 +229,24 @@ module T2Airtime
       end
     end
 
-    def self.take(operator_qty = 1, qty = 5)
-      operators = T2Airtime::Operator.take(operator_qty).shuffle
+    def self.take(qty = 5, operator_qty = 1, country_qty = 1)
+      operators = T2Airtime::Operator.take(operator_qty, country_qty).shuffle
       unless operators.empty?
         operators.flat_map do |operator| (          
-          products = all(operator['id'])
+          products = all(operator[:id])
           products.success? ? serialize(products.data, products.headers[:date], qty) : []
         )
         end
       end
     end
 
-    def self.serialize(data, ts = Time.zone.now.to_s, qty = nil)
+    def self.serialize(data, ts = Time.zone.now.to_s, qty = 'all')
       return [] if data[:product_list].nil?
       ids = data[:product_list].split(',')
       retail_prices = data[:retail_price_list].split(',')
       wholesale_prices = data[:wholesale_price_list].split(',')
       Rails.cache.fetch("products/#{data[:operatorid]}/serializer", expires_in: 1.hour) do
-        ids.take(qty.nil? ? ids.count : qty).each_with_index.map do |id, n|
+        ids.take(qty==='all' ? ids.count : qty).each_with_index.map do |id, n|
           {
             type: 'products',
             id: Integer(id),
@@ -293,10 +293,10 @@ module T2Airtime
       reply.success? ? serialize(reply.data, qty) : []
     end
 
-    def self.serialize(data, qty = nil)
+    def self.serialize(data, qty = 'all')
       return [] if data[:transaction_list].nil?
       ids = data[:transaction_list].split(',')
-      ids.take(qty.nil? ? ids.count : qty).each.map { |id| show(id) }
+      ids.take(qty==='all' ? ids.count : qty).each.map { |id| show(id) }
     end
 
     def self.get(id)
