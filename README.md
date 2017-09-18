@@ -1,7 +1,7 @@
 t2-airtime
 ==========
 
-[T2-Airtime](https://t2_airtime.github.io) client, `t2_airtime`.
+[T2-Airtime](https://matteolc.github.io/t2_airtime/) client, `t2_airtime`.
 
 T2-Airtime is a Ruby gem providing a proxy cache and a REST API to [TransferTo](https://www.transfer-to.com/home) Airtime service.
 
