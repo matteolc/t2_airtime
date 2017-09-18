@@ -26,13 +26,32 @@ Download image:
 ```
 docker pull voxbox/t2_airtime
 ```
-Run `docker run voxbox/t2_airtime`
 
-Build from source code:
+Export your secrets:
 
+```sh
+export T2_SHOP_USER=<your_username>
+export T2_AIRTIME_KEY=<your_token>
 ```
-docker build -t "voxbox/t2_airtime" .
+
+Export the host allowed to access the API (CORS):
+```sh
+export CORS_ORIGIN=<your_frontend_address>
 ```
+
+Run:
+
+```sh
+docker run -d \
+  --name t2_airtime \
+  -p 3000:3000 \
+  -e T2_SHOP_USER \
+  -e T2_AIRTIME_KEY \
+  -e CORS_ORIGIN \
+  voxbox/t2_airtime
+docker logs t2_airtime -f  
+```
+
 
 ### Setup Transfer-To credentials
 
