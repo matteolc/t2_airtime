@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails', '~> 3.6'
   s.add_development_dependency 'rack-cors'
 
-  s.add_dependency 'rails', '~> 5.1.3'
+  s.add_dependency 'rails', '~> 5.1.4'
   s.add_dependency 'dotenv-rails', '~> 2.2', '>= 2.2.1'
   s.add_dependency 'faraday', '0.9.1'
   s.add_dependency 'countries', '2.1.2'
