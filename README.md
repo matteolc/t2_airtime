@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/matteolc/t2_airtime.svg?branch=master)](https://travis-ci.org/matteolc/t2_airtime)
+[![Build Status](https://travis-ci.org/matteolc/t2_airtime.svg?branch=master)](https://travis-ci.org/matteolc/t2_airtime) 
+[![Gem Version](https://badge.fury.io/rb/t2_airtime.svg)](https://badge.fury.io/rb/t2_airtime)
+[![GitHub version](https://badge.fury.io/gh/matteolc%2Ft2_airtime.svg)](https://badge.fury.io/gh/matteolc%2Ft2_airtime)
 
 t2-airtime
 ==========
