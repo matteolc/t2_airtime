@@ -13,6 +13,14 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'simplecov'
+SimpleCov.start :rails do
+  filters.clear # This will remove the :root_filter and :bundler_filter that come via simplecov's defaults
+  add_filter do |src|
+    !(src.filename =~ /^#{SimpleCov.root}/) unless src.filename =~ /t2_airtime/
+  end
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
