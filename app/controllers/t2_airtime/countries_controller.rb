@@ -7,8 +7,7 @@ module T2Airtime
         render_data T2Airtime::Country.serialize @countries.data,
                                                  @countries.headers[:date]
       else
-        render_error T2Airtime::Error.new @countries.error_code,
-                                          @countries.error_message
+        render_error @countries
       end
     end
 

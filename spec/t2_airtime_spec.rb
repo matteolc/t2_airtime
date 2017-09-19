@@ -28,6 +28,7 @@ RSpec.describe T2Airtime do
 
     it 'serializes account information' do    
       info = T2Airtime::Account.info
+      p info
       expect(info[:attributes][:type]).to eq('Master')
     end
     

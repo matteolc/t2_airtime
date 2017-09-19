@@ -7,8 +7,7 @@ module T2Airtime
         render_data T2Airtime::Account.serialize @account.data,
                                                  @account.headers[:date]
       else
-        render_error T2Airtime::Error.new @account.error_code,
-                                          @account.error_message
+        render_error @account
       end
     end
   end

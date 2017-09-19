@@ -32,7 +32,9 @@ module T2Airtime
       }
     end
 
-    def render_error(error)
+    def render_error(response)
+      error = T2Airtime::Error.new response.error_code,
+      response.error_message      
       render json: {
         errors: [{
           code: error.code,

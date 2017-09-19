@@ -7,8 +7,7 @@ module T2Airtime
         render_data T2Airtime::Operator.serialize @operators.data,
                                                   @operators.headers[:date]
       else
-        render_error T2Airtime::Error.new @operators.error_code,
-                                          @operators.error_message
+        render_error @operators
       end
     end
 

@@ -7,8 +7,7 @@ module T2Airtime
           render_data T2Airtime::Msisdn.serialize @msisdn_info.data,
                                                   @msisdn_info.headers[:date]
         else 
-          render_error T2Airtime::Error.new @msisdn_info.error_code,
-                                            @msisdn_info.error_message
+          render_error @msisdn_info
         end
       end
 
@@ -17,8 +16,7 @@ module T2Airtime
         if @reserve_id.success?
           render_data @reserve_id.data
         else
-          render_error T2Airtime::Error.new @reserve_id.error_code,
-                                            @reserve_id.error_message
+          render_error @reserve_id
         end
       end      
 
@@ -38,8 +36,7 @@ module T2Airtime
         if @topup.success?
           render_data T2Airtime::Topup.serialize @topup.data
         else
-          render_error T2Airtime::Error.new @topup.error_code,
-                                            @topup.error_message
+          render_error @topup
         end
       end      
     

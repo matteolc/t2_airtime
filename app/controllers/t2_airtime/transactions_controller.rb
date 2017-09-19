@@ -10,8 +10,7 @@ module T2Airtime
       if @transactions.success?
         render_data T2Airtime::Transaction.serialize @transactions.data
       else
-        render_error T2Airtime::Error.new @transactions.error_code,
-                                          @transactions.error_message
+        render_error @transactions
       end
     end
 
@@ -21,8 +20,7 @@ module T2Airtime
         render_data T2Airtime::Transaction.serialize_one @transaction.data,
                                                          @transaction.headers[:date]
       else
-        render_error T2Airtime::Error.new @transaction.error_code,
-                                          @transaction.error_message
+        render_error @transaction
       end
     end
 
