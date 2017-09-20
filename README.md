@@ -18,41 +18,6 @@ T2-Airtime is a Ruby gem providing a proxy cache and a REST API to [TransferTo](
 ``` sh
 gem install t2_airtime
 ```
-
-### Using Docker - alternative if you don't install ruby or installation not work for you
-
-Download image:
-
-```
-docker pull voxbox/t2_airtime
-```
-
-Export your secrets:
-
-```sh
-export T2_SHOP_USER=<your_username>
-export T2_AIRTIME_KEY=<your_token>
-```
-
-Export the host allowed to access the API (CORS):
-```sh
-export CORS_ORIGIN=<your_frontend_address>
-```
-
-Run:
-
-```sh
-docker run -d \
-  --name t2_airtime \
-  -p 3000:3000 \
-  -e T2_SHOP_USER \
-  -e T2_AIRTIME_KEY \
-  -e CORS_ORIGIN \
-  voxbox/t2_airtime
-docker logs t2_airtime -f  
-```
-
-
 ### Setup Transfer-To credentials
 
 1. Make sure you are a registered user of [Transfer-To](https://www.transfer-to.com/home).
@@ -63,6 +28,43 @@ docker logs t2_airtime -f
 ```sh
 export T2_SHOP_USER=<your_username>
 export T2_AIRTIME_KEY=<your_token>
+```
+
+4. Export the host allowed to access the API (CORS):
+```sh
+export CORS_ORIGIN=<your_frontend_address>
+```
+
+5. Export your API secrets:
+
+```sh
+export API_KEY=<t2_airtime_key>
+export API_TOKEN=<t2_airtime_token>
+```
+
+
+### Using Docker
+
+1. Download image:
+
+```
+docker pull voxbox/t2_airtime
+```
+
+2. Export your secrets in env (see previous step)
+
+3. Run:
+
+```sh
+docker run -d \
+  --name t2_airtime \
+  -p 3000:3000 \
+  -e T2_SHOP_USER \
+  -e T2_AIRTIME_KEY \
+  -e API_KEY \
+  -e API_TOKEN \
+  -e CORS_ORIGIN \
+  voxbox/t2_airtime
 ```
 
 ## Development
@@ -92,6 +94,13 @@ Inside the `t2_airtime` repository directory run:
 
 ```sh
 $ bundle exec rspec
+```
+
+To start a development server:
+
+```sh
+$ cd spec/dummy
+$ puma -C config/puma.rb
 ```
 
 
