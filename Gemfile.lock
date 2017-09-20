@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    t2_airtime (0.5.2)
+    t2_airtime (0.6.0)
       countries (= 2.1.2)
       dotenv-rails (~> 2.2, >= 2.2.1)
       faraday (= 0.9.1)
